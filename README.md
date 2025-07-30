@@ -1,4 +1,4 @@
-# Wayback URLs Browser Extension
+# WayPeek
 
 A powerful browser extension for extracting historical URLs from the Wayback Machine, designed for security researchers, bug bounty hunters, and penetration testers.
 
