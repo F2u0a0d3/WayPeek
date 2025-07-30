@@ -2,10 +2,9 @@
 
 A powerful browser extension for extracting historical URLs from the Wayback Machine, designed for security researchers, bug bounty hunters, and penetration testers.
 
-<img width="1980" height="1069" alt="Screenshot_1" src="https://github.com/user-attachments/assets/c66cbc8e-06f9-4d91-901f-06d0149f3e97" />
-<img width="1976" height="1033" alt="Screenshot_2" src="https://github.com/user-attachments/assets/c913c36c-cce2-4b64-90af-fd73b56a5147" />
-<img width="2558" height="1373" alt="Screenshot_3" src="https://github.com/user-attachments/assets/a9e3c0c9-38b2-4225-8bab-3728480338db" />
-
+<img width="404" height="601" alt="Github_1" src="https://github.com/user-attachments/assets/f05e0bcd-a419-4c6e-b0a1-c579936dfdf3" />
+<img width="407" height="600" alt="Github_2" src="https://github.com/user-attachments/assets/7acc5c69-2726-457c-8f50-8121d09289ba" />
+<img width="407" height="601" alt="Github_3" src="https://github.com/user-attachments/assets/fcb3bfb4-af4c-48c5-a561-07ace1ad9798" />
 
 ## Features
 
