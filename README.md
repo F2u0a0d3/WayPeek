@@ -6,7 +6,9 @@ A powerful browser extension for extracting historical URLs from the Wayback Mac
 
 - **Domain URL Extraction**: Fetch all archived URLs for any domain from the Wayback Machine
 - **Local Storage**: Store retrieved URLs locally for offline access
-- **Advanced Filtering**: Filter by file extensions, status codes, and custom patterns
+- **Advanced Filtering**: Filter by file extensions, status codes, URL patterns, and date ranges
+- **Security Presets**: Quick filters for admin panels, API endpoints, config files, and more
+- **Storage Management**: View extraction history, manage stored domains, and track usage
 - **Export Options**: Export to TXT, JSON, or CSV formats
 - **Real-time Search**: Search through extracted URLs instantly
 - **Progress Tracking**: Visual progress indicators during extraction
@@ -33,14 +35,32 @@ A powerful browser extension for extracting historical URLs from the Wayback Mac
 ### Basic URL Extraction
 1. Click the extension icon in your browser toolbar
 2. Enter a domain name (e.g., `example.com`)
-3. Click "Extract URLs" to fetch historical data
-4. View results in the Results tab
+3. Configure extraction options:
+   - **Remove WWW**: Strip www prefixes automatically
+   - **Include Subdomains**: Extract URLs from all subdomains
+   - **Fast Mode**: Limit to 10,000 URLs for faster processing
+4. Click "Extract URLs" to fetch historical data
+5. View results in the Results tab
+
+### Interface Tabs
+- **Results**: View extracted URLs with search and filtering
+- **Filters**: Advanced filtering options and security presets
+- **Export**: Export data in various formats and manage current data
+- **Storage**: View extraction history and manage stored domains
 
 ### Filtering Options
 - **Extensions**: Filter by file types (.php, .js, .pdf, etc.)
 - **Status Codes**: Show only specific HTTP response codes
-- **Custom Patterns**: Use text patterns to find specific URLs
+- **URL Patterns**: Use regex patterns to find specific URLs (e.g., `\.php$`, `admin|api|config`)
+- **Date Range**: Filter by date range using YYYYMMDD format (e.g., 20200101 to 20231231)
 - **Real-time Search**: Type in the search box to filter results
+- **Security Presets**: Quick filters for common security targets:
+  - Admin Panels: `/admin`, `/administrator`, `/wp-admin`
+  - API Endpoints: `/api/`, `/v1/`, `.json`
+  - Config Files: `.config`, `.ini`, `.env`, `.yml`
+  - Backup Files: `.bak`, `.backup`, `.old`, `.tmp`
+  - PHP Files: `.php`, `.php3`, `.phtml`
+  - Error Pages: 404, 500, 403, 401 status codes
 
 ### Export Features
 - **Plain Text**: Simple list of URLs
@@ -48,11 +68,18 @@ A powerful browser extension for extracting historical URLs from the Wayback Mac
 - **CSV**: Spreadsheet-compatible format
 - **Copy to Clipboard**: Quick copying for immediate use
 
+### Storage Management
+- **Search History**: View all previously extracted domains
+- **Domain Management**: Load, export, or delete individual domain data
+- **Storage Statistics**: Monitor storage usage and domain count
+- **Data Import/Export**: Backup and restore all extension data
+- **Automatic Cleanup**: Remove old data (30+ days) to save space
+
 ### Advanced Features
-- **Subdomain Inclusion**: Extract URLs from all subdomains
-- **WWW Removal**: Automatically clean www prefixes
-- **Context Menu**: Right-click selected text to extract URLs for that domain
 - **Current Tab Detection**: Auto-populate domain from active tab
+- **Persistent Storage**: Data survives browser restarts
+- **Duplicate Removal**: Automatic deduplication of URLs
+- **Timestamp Tracking**: Track when URLs were last archived
 
 ## Security & Privacy
 
@@ -110,16 +137,23 @@ The extension uses the Wayback Machine's CDX API:
 
 ## Configuration
 
-### Options
-- **Remove WWW**: Automatically strip www prefixes
-- **Include Subdomains**: Extract from all subdomains
-- **Filter Common Files**: Hide common assets (images, stylesheets)
+### Extraction Options
+- **Remove WWW**: Automatically strip www prefixes from domains
+- **Include Subdomains**: Extract URLs from all subdomains (*.domain.com)
+- **Fast Mode**: Limit extraction to 10,000 URLs for faster processing
+
+### Filter Options
+- **Client-side Filtering**: All filtering happens on locally stored data
+- **Real-time Updates**: Filters apply as you type
+- **Multiple Criteria**: Combine extensions, status codes, patterns, and date ranges
+- **Regex Support**: Advanced pattern matching with regex expressions
 
 ### Storage Management
-- View storage usage in the export tab
-- Clear individual domain data
-- Bulk clear all stored data
-- Automatic cleanup of old data (configurable)
+- **Storage Tab**: View usage statistics and extraction history
+- **Individual Management**: Load, export, or delete specific domain data
+- **Bulk Operations**: Export all data or clear all storage
+- **Automatic Cleanup**: Remove data older than 30 days
+- **Import/Export**: Backup and restore extension data as JSON
 
 ## Troubleshooting
 
@@ -142,8 +176,15 @@ The extension uses the Wayback Machine's CDX API:
 
 **Storage Full**
 - Use export feature to backup data
-- Clear old domain data from export tab
+- Clear old domain data from Storage tab
+- Use "Clear Old Data (30+ days)" feature
 - Browser storage quota is typically 5MB
+
+**Filtering Not Working**
+- Ensure URLs are extracted first before applying filters
+- Check regex patterns for syntax errors
+- Try simpler patterns if complex regex fails
+- Use "Clear All" to reset filters
 
 ### Support
 - Check browser console for error messages
