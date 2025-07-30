@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wayback URLs</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Wayback URLs</h1>
+            <p>Extract historical URLs for security reconnaissance</p>
+        </header>
+
+        <div class="input-section">
+            <div class="input-group">
+                <input type="text" id="domainInput" placeholder="Enter domain (e.g., example.com)" />
+                <button id="extractBtn" class="btn-primary">Extract URLs</button>
+            </div>
+            <div class="options">
+                <label>
+                    <input type="checkbox" id="removeWWW" checked>
+                    Remove www subdomain
+                </label>
+                <label>
+                    <input type="checkbox" id="includeSubdomains">
+                    Include subdomains
+                </label>
+                <label>
+                    <input type="checkbox" id="fastMode" checked>
+                    Fast mode (10K limit)
+                </label>
+            </div>
+        </div>
+
+        <div class="progress-section" id="progressSection" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">Fetching URLs...</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="results">Results</button>
+            <button class="tab-btn" data-tab="filters">Filters</button>
+            <button class="tab-btn" data-tab="export">Export</button>
+            <button class="tab-btn" data-tab="storage">Storage</button>
+        </div>
+
+        <div class="tab-content">
+            <div id="results" class="tab-pane active">
+                <div class="stats" id="stats" style="display: none;">
+                    <span id="totalUrls">0</span> URLs found
+                    <span id="filteredUrls" style="display: none;">(<span id="filteredCount">0</span> filtered)</span>
+                </div>
+                
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search URLs..." />
+                </div>
+
+                <div class="url-list" id="urlList">
+                    <div class="empty-state">
+                        <p>No URLs extracted yet</p>
+                        <p>Enter a domain above to get started</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="filters" class="tab-pane">
+                <div class="filter-group">
+                    <label>File Extensions:</label>
+                    <div class="filter-input-group">
+                        <input type="text" id="extensionInput" placeholder="e.g., php,asp,js,json" />
+                        <div class="filter-hint">Filter current results by file extensions</div>
+                    </div>
+                    <div class="checkbox-group" id="extensionFilters"></div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Status Codes:</label>
+                    <div class="filter-input-group">
+                        <input type="text" id="statusInput" placeholder="e.g., 200,301,404" />
+                        <div class="filter-hint">Filter current results by HTTP status codes</div>
+                    </div>
+                    <div class="checkbox-group" id="statusFilters"></div>
+                </div>
+
+                <div class="filter-group">
+                    <label>URL Pattern (Regex):</label>
+                    <div class="filter-input-group">
+                        <input type="text" id="patternFilter" placeholder="e.g., .txt or \.php$ or admin|api|config" />
+                        <div class="filter-hint">Filter current results by URL pattern (supports regex)</div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label>Date Range (YYYYMMDD):</label>
+                    <div class="date-range-group">
+                        <input type="text" id="fromDate" placeholder="From (e.g., 20200101)" maxlength="8" />
+                        <input type="text" id="toDate" placeholder="To (e.g., 20231231)" maxlength="8" />
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button id="applyFilters" class="btn-primary">Apply Filters</button>
+                    <button id="clearFilters" class="btn-secondary">Clear All</button>
+                    <button id="presetFilters" class="btn-secondary">Security Presets ▼</button>
+                </div>
+
+                <div class="security-presets" id="securityPresets" style="display: none;">
+                    <div class="preset-group">
+                        <h4>Quick Security Filters:</h4>
+                        <button class="preset-btn" data-preset="admin">Admin Panels</button>
+                        <button class="preset-btn" data-preset="api">API Endpoints</button>
+                        <button class="preset-btn" data-preset="config">Config Files</button>
+                        <button class="preset-btn" data-preset="backups">Backup Files</button>
+                        <button class="preset-btn" data-preset="php">PHP Files</button>
+                        <button class="preset-btn" data-preset="errors">Error Pages</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="export" class="tab-pane">
+                <div class="export-options">
+                    <div class="export-format">
+                        <label>Format:</label>
+                        <select id="exportFormat">
+                            <option value="txt">Plain Text</option>
+                            <option value="json">JSON</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                    
+                    <div class="export-scope">
+                        <label>
+                            <input type="radio" name="exportScope" value="all" checked>
+                            All URLs
+                        </label>
+                        <label>
+                            <input type="radio" name="exportScope" value="filtered">
+                            Filtered URLs only
+                        </label>
+                    </div>
+                </div>
+
+                <button id="exportBtn" class="btn-primary">Download Export</button>
+                <button id="copyBtn" class="btn-secondary">Copy to Clipboard</button>
+                <button id="clearDataBtn" class="btn-danger">Clear All Data</button>
+            </div>
+
+            <div id="storage" class="tab-pane">
+                <div class="storage-header">
+                    <div class="storage-stats" id="storageStats">
+                        <div class="stat-item">
+                            <span class="stat-label">Domains:</span>
+                            <span class="stat-value" id="totalDomains">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Total URLs:</span>
+                            <span class="stat-value" id="totalStoredUrls">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Storage Used:</span>
+                            <span class="stat-value" id="storageUsed">0 KB</span>
+                        </div>
+                    </div>
+                    <button id="refreshStorage" class="btn-secondary">Refresh</button>
+                </div>
+
+                <div class="search-history">
+                    <h3>Search History</h3>
+                    <div class="history-controls">
+                        <input type="text" id="historySearch" placeholder="Search domains..." />
+                        <select id="sortHistory">
+                            <option value="date">Sort by Date</option>
+                            <option value="domain">Sort by Domain</option>
+                            <option value="urls">Sort by URL Count</option>
+                        </select>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <div class="no-data">No search history yet</div>
+                    </div>
+                </div>
+
+                <div class="storage-actions">
+                    <button id="exportAllData" class="btn-primary">Export All Data</button>
+                    <button id="importData" class="btn-secondary">Import Data</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                    <button id="clearOldData" class="btn-secondary">Clear Old Data (30+ days)</button>
+                    <button id="clearAllStorage" class="btn-danger">Clear All Storage</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
